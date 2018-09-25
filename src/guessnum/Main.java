@@ -129,45 +129,67 @@ public class Main {
 //            i ++;
 //            if (i==3) break;
 //        }
-    results.stream()
-            .sorted(Comparator.<GameResult>comparingInt(r -> r.triesCount)
-                    .thenComparingLong(r -> r.time))
-            .limit(3)
-            .forEach(r -> {
-        System.out.printf("%s tried %d times in %.2f sec\n", r.name, r.triesCount, r.time/1000.0);
+        int maxLen = findMaxNameLen();
+        results.stream()
+                .sorted(Comparator.<GameResult>comparingInt(r -> r.triesCount)
+                        .thenComparingLong(r -> r.time))
+                .limit(3)
+                .forEach(r -> {
+                            System.out.print(r.name);
+                            for (int i = 0; i < (maxLen - r.name.length()); i++) {
+                                System.out.print(" ");
+                        }
+                        System.out.printf(" tried %d times in %.2f sec\n", r.triesCount, r.time / 1000.0);
     });
-    }
-
-    static String askYN() {
-        String answer;
-        do {
-            answer = scan.next();
-            if (!answer.equalsIgnoreCase("y") && !answer.equalsIgnoreCase("n")) {
-                System.out.println("Answer y or n!");
-                continue;
-            } else {
-                return answer;
-            }
-        } while (true);
-    }
-
-    static int askNum() {
-        System.out.println("Please try to guess the number:");
-        int userNum;
-        do {
-            try {
-                userNum = scan.nextInt();
-            } catch (InputMismatchException ex) {
-                System.out.println("Please enter the number");
-                scan.next();
-                continue;
-            }
-            if (userNum > 0 && userNum < 101) {
-                return userNum;
-            } else {
-                System.out.println("The number should from 1 to 100. Try again:");
-                continue;
-            }
-        } while (true);
-    }
 }
+
+    private static int findMaxNameLen() {
+        return results.stream()
+                .map(r -> r.name)
+                .map(n -> n.length())
+                .max(Comparator.naturalOrder())
+                .get();
+    }
+
+//   private static int findMaxNameLen() {
+//        int result = 0;
+//        for (GameResult r : results) {
+//            if (result < r.name.length()) {
+//                result = r.name.length();
+//            }
+//        }
+//        return result;
+//    }
+        static String askYN () {
+            String answer;
+            do {
+                answer = scan.next();
+                if (!answer.equalsIgnoreCase("y") && !answer.equalsIgnoreCase("n")) {
+                    System.out.println("Answer y or n!");
+                    continue;
+                } else {
+                    return answer;
+                }
+            } while (true);
+        }
+
+        static int askNum () {
+            System.out.println("Please try to guess the number:");
+            int userNum;
+            do {
+                try {
+                    userNum = scan.nextInt();
+                } catch (InputMismatchException ex) {
+                    System.out.println("Please enter the number");
+                    scan.next();
+                    continue;
+                }
+                if (userNum > 0 && userNum < 101) {
+                    return userNum;
+                } else {
+                    System.out.println("The number should from 1 to 100. Try again:");
+                    continue;
+                }
+            } while (true);
+        }
+    }
